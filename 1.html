@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Labubu 正在发呆...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            /* 背景使用了柔和的粉紫色渐变 */
+            background: linear-gradient(135deg, #fff1eb 0%, #ace0f9 100%);
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            padding: 15px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            transform: translateY(0);
+            transition: transform 0.3s;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            font-size: 0; /* 消除图片下方的空隙 */
+        }
+
+        .labubu-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            /* 图片滤镜美化：增加一点鲜艳度 */
+            filter: saturate(1.1) contrast(1.05); 
+        }
+
+        /* --- 鼻涕泡泡核心样式 --- */
+        .snot-bubble {
+            position: absolute;
+            z-index: 10;
+            cursor: pointer;
+            
+            /* 
+               ★ 关键定位 ★ 
+               我已经根据你提供的图片大致对齐了鼻子。
+               如果位置不准，微调下面的 top (上下) 和 left (左右) 
+            */
+            top: 40%; 
+            left: 51%;
+            
+            width: 40px;  /* 泡泡大小 */
+            height: 40px;
+            
+            /* 泡泡的质感：半透明 + 蓝色反光 */
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 255, 255, 0.95) 0%, 
+                rgba(255, 255, 255, 0.2) 40%, 
+                rgba(169, 234, 254, 0.5) 100%);
+            border-radius: 50%;
+            box-shadow: 
+                inset -2px -2px 6px rgba(135, 206, 235, 0.5), /* 内部阴影 */
+                0 5px 15px rgba(0,0,0,0.15); /* 外部投影 */
+            border: 1px solid rgba(255, 255, 255, 0.5);
+
+            /* 呼吸动画 */
+            animation: breathe 3s infinite ease-in-out;
+            transform-origin: center top; 
+        }
+
+        /* 泡泡高光 */
+        .snot-bubble::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 18%;
+            width: 25%;
+            height: 12%;
+            background: #fff;
+            border-radius: 50%;
+            transform: rotate(-45deg);
+            filter: blur(0.5px);
+        }
+
+        @keyframes breathe {
+            0% { transform: translateX(-50%) scale(0.5) translateY(0); opacity: 0.9; }
+            50% { transform: translateX(-50%) scale(1.3) translateY(8px); opacity: 0.95; } /* 变大且下垂 */
+            100% { transform: translateX(-50%) scale(0.5) translateY(0); opacity: 0.9; }
+        }
+
+        /* 破裂效果 */
+        .pop {
+            animation: pop-anim 0.2s forwards !important;
+        }
+
+        @keyframes pop-anim {
+            0% { transform: translateX(-50%) scale(1.3); opacity: 1; }
+            100% { transform: translateX(-50%) scale(2); opacity: 0; }
+        }
+
+        h2 {
+            margin: 15px 0 5px;
+            color: #555;
+            font-size: 1.2rem;
+        }
+
+        p {
+            margin: 0;
+            color: #888;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="image-wrapper">
+                <!-- 
+                   这里使用了 wsrv.nl 代理服务来加载你提供的百度图片原图 
+                   原图链接被编码在 url 参数中
+                -->
+                <img src="https://wsrv.nl/?url=http://qcloud.dpfile.com/pc/-MpPcgzKf4HSWGK-f694Qf2NdHfPc1ooQ7P8byRMgesStlc3tb2D46EPS2wRcTFF.jpg&w=600&output=webp" alt="Labubu" class="labubu-img">
+                
+                <!-- 鼻涕泡泡 -->
+                <div class="snot-bubble" id="bubble" onclick="burstBubble()"></div>
+            </div>
+            <h2>Labubu 睡着了</h2>
+            <p>嘘... 戳破泡泡会吵醒它</p>
+        </div>
+    </div>
+
+    <script>
+        function burstBubble() {
+            const bubble = document.getElementById('bubble');
+            if (bubble.classList.contains('pop')) return;
+
+            // 添加破裂动画类
+            bubble.classList.add('pop');
+
+            // 手机震动反馈 (如果支持)
+            if(navigator.vibrate) navigator.vibrate(50);
+
+            // 1.5秒后重新长出泡泡
+            setTimeout(() => {
+                bubble.classList.remove('pop');
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
